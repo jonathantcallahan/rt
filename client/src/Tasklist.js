@@ -4,17 +4,24 @@ class Tasklist extends Component {
     constructor(props){
         super(props)
         this.state = {
-
+            taskList: {}
         }
+        this.update = this.update.bind(this)
     }
     componentDidMount(){
-        console.log(this.props.tasks)
-        this.setState(({t:this.props.tasks}),() => console.log(this.state))
+        this.setState({t:this.props.tasks})
+    }
+    componentDidUpdate(){
+        console.log(this.props)
+    }
+    update(){
+
     }
     render(){
         return (
             <div>
                 <div onClick={this.state.t && this.state.t.list}>asdf</div>
+                <input></input>
             </div>
         )
     }
