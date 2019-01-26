@@ -9,20 +9,27 @@ class App extends Component {
     this.state = {
       test:'asdf',
       rn: 0,
-      taskList: {}
+      taskList: []
     }
     this.tasks.list = this.tasks.list.bind(this)
     this.tasks.add = this.tasks.add.bind(this)
-    this.tasks.delete = this.tasks.complete.bind(this)
+    this.tasks.complete = this.tasks.complete.bind(this)
     this.getTasks = this.getTasks.bind(this)
   }
   getTasks(){ return JSON.parse(localStorage.getItem('tasks')) }
-  setTasks(tasks){ localStorage.setItem('tasks', JSON.stringify(tasks)); this.setState({taskList: tasks}) }
+  setTasks(tasks){
+    tasks = tasks ? tasks : this.getTasks()
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+    const taskArray = [] 
+    for(let key in tasks){
+      taskArray.push([key,tasks[key]])
+    } 
+    this.setState({taskList: taskArray}, () => console.log('setTasks ran', this.state)) 
+  }
   tasks = {
     list: () => {
       // console.log(this.state)
-      const t = this.getTasks()
-      this.setState({rn: Math.floor(Math.random() * 10)})
+      // this.setState({rn: Math.floor(Math.random() * 10)})
 
     },
     add: name => {
@@ -30,14 +37,26 @@ class App extends Component {
       t[name] = false
       this.setTasks(t)
     },
-    complete: name => {
-
+    complete: task => {
+      console.log('tasks.complete ran', task)
+      const t = this.getTasks()
+      t[task] = !t[task]
+      console.log(t)
+      this.setTasks(t)
+    },
+    delete: task => {
+      console.log(task)
+      const t = this.getTasks()
+      delete t[task]
+      this.setTasks(t)
     }
   }
   componentDidMount(){
     localStorage.getItem('tasks') == null && localStorage.setItem('tasks',JSON.stringify({}))
+    this.setTasks()
     
-  }
+    
+  } 
   render() {
     return (
       <div className="App">
